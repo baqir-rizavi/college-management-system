@@ -40,7 +40,7 @@ class Student(User):
         features = [self.pay_semester_dues, self.view_enrolled_courses, self.view_pending_assignments,
                     self.mark_assignment_complete]
         option = Student.menu()
-        while option != 4:
+        while option != 5:
             features[option - 1]()
             option = Student.menu()
 
@@ -80,7 +80,7 @@ class Student(User):
             for pending_assignment in pending_assignments:
                 print(pending_assignment['id'], '\t', pending_assignment['title'], end='\t')
                 if Utils.input_validated_int_range("('0' or '1'): ", 0, 1):
-                    repo.update_assignment_status(self.__id, pending_assignment['id'], False)
+                    repo.update_assignment_status(self.__id, pending_assignment['id'], True)
         else:
             print("no assignments yet")
 

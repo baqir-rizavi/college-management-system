@@ -110,7 +110,40 @@ class Admin(User):
 
     @staticmethod
     def update_student():
-        pass  # TODO: complete
+        dictionary = {}
+        id = Utils.input_validated_int('enter student "id" to update: ')
+        username = input('enter a username: ')
+        if username != '':
+            dictionary['username'] = username
+        password = input('enter a password: ')
+        if password != '':
+            dictionary['passwd'] = password
+        dictionary2 = {}
+        name = input('enter student name: ')
+        if name != '':
+            dictionary2['full_name'] = name
+        roll_no = input('enter roll no: ')
+        if roll_no != '':
+            dictionary2['roll_no'] = roll_no
+        batch = input('enter batch: ')
+        if batch != '':
+            dictionary2['batch'] = batch
+        try:
+            semester_dues = input('enter semester dues: ')
+            if semester_dues != '':
+                semester_dues = int(semester_dues)
+                dictionary2['semester_dues'] = semester_dues
+            current_semester = input('enter current semester: ')
+            if current_semester != '':
+                current_semester = int(current_semester)
+                dictionary2['current_semester'] = current_semester
+        except ValueError as e:
+            print(e, ' try updating again')
+            return
+        if len(dictionary) != 0:
+            repo.update_users_by_usr_id(repo.get_usr_id_by_student_id(id), dictionary)
+        if len(dictionary2) != 0:
+            repo.update_student_by_id(id, dictionary2)
 
     @staticmethod
     def view_all_student():
@@ -143,13 +176,40 @@ class Admin(User):
         no_of_courses = 0
         repo.insert_teacher(username, password, name, salary, experience, no_of_courses)
 
-    @classmethod
-    def update_teacher(cls):
-        pass  # TODO: complete
+    @staticmethod
+    def update_teacher():
+        dictionary = {}
+        id = Utils.input_validated_int('enter teacher "id" to update: ')
+        username = input('enter a username: ')
+        if username != '':
+            dictionary['username'] = username
+        password = input('enter a password: ')
+        if password != '':
+            dictionary['passwd'] = password
+        dictionary2 = {}
+        name = input('enter name: ')
+        if name != '':
+            dictionary2['full_name'] = name
+        try:
+            salary = input('enter salary: ')
+            if salary != '':
+                dictionary2['salary'] = int(salary)
+            experience = input('enter experience (float): ')
+            if experience != '':
+                dictionary2['experience'] = float(experience)
+        except ValueError as e:
+            print(e, ' try updating again')
+            return
+        if len(dictionary) != 0:
+            repo.update_users_by_usr_id(repo.get_usr_id_by_teacher_id(id), dictionary)
+        if len(dictionary2) == 0:
+            repo.update_teacher_by_id(id, dictionary2)
 
     @staticmethod
     def delete_teacher():
         id = input('enter  teacher id to delete: ')
+        for courses in repo.get_courses_by_teacher_id(id):
+            repo.update_course_teach_id_by_id(courses['id'])
         repo.delete_teacher_by_id(id)
 
     @staticmethod

@@ -1,5 +1,7 @@
 import pymysql
 import pymysql.cursors
+
+import DBUtils
 from InitDB import config
 
 
@@ -409,6 +411,11 @@ class Repository:
         query = f"""
                     delete from course where id = {id};
                 """
+        query2 = f"""
+                    update teacher
+                    set no_of_courses = no_of_courses - 1
+                    where id = {get_teacher_id_by_course_id(id)};
+                """
         ret = False
         try:
             conn = get_connection()
@@ -519,7 +526,8 @@ class Repository:
         query = f"""
                     update assignment_status
                     set is_complete = {status}
-                    where st_id = {st_id}
+                    where 
+                    st_id = {st_id}
                     and 
                     ass_id = {ass_id};
                 """
@@ -535,3 +543,123 @@ class Repository:
         except pymysql.Error as e:
             print(e)
         return ret
+
+    @staticmethod
+    def update_student_by_id(id, dictionary):
+        query = DBUtils.SQLQueryGenerator.generate_update_query(table_name='student',
+                                                                sql_condition=f"id = {id}",
+                                                                set_values=dictionary)
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = True
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def get_usr_id_by_student_id(id):
+        query = f"select usr_id from student where id = {id}"
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = cur.fetchone()['usr_id']
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def get_usr_id_by_teacher_id(id):
+        query = f"select usr_id from teacher where id = {id}"
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = cur.fetchone()['usr_id']
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def update_users_by_usr_id(usr_id, dictionary):
+        query = DBUtils.SQLQueryGenerator.generate_update_query(table_name='users',
+                                                                sql_condition=f"id = {usr_id}",
+                                                                set_values=dictionary)
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = True
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def update_teacher_by_id(id, dictionary2):
+        query = DBUtils.SQLQueryGenerator.generate_update_query(table_name='teacher',
+                                                                sql_condition=f"id = {id}",
+                                                                set_values=dictionary2)
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = True
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def get_teacher_id_by_course_id(id):
+        query = f"select teach_id from course where id = {id}"
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = cur.fetchone()['teach_id']
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+    @staticmethod
+    def update_course_teach_id_by_id(id):
+        query = f"update course set teach_id = null where id = {id}"
+        ret = False
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
+            result1 = cur.execute(query)
+            if result1 >= 1:
+                ret = True
+            conn.commit()
+            conn.close()
+        except pymysql.Error as e:
+            print(e)
+        return ret
+
+

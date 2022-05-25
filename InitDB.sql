@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS teacher
   experience FLOAT(6,3),
   no_of_courses int,
   usr_id int not null,
-  foreign KEY (usr_id) REFERENCES users(id)
+  foreign KEY (usr_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS student
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS student
   semester_dues int,
   current_semester int,
   usr_id int not null,
-  foreign KEY (usr_id) REFERENCES users(id)
+  foreign KEY (usr_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS course
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS student_enrollment
   cr_id int,
   enroll_date datetime,
   primary key (st_id, cr_id),
-  foreign key (st_id) references student(id),
-  foreign key (cr_id) references course(id)
+  foreign key (st_id) references student(id) ON DELETE CASCADE,
+  foreign key (cr_id) references course(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS attendance
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS attendance
   on_day datetime,
   is_present varchar(1) check (is_present in('p','a')),
   primary key (st_id, cr_id, on_day),
-  foreign key (st_id) references student(id),
-  foreign key (cr_id) references course(id)
+  foreign key (st_id) references student(id) ON DELETE CASCADE,
+  foreign key (cr_id) references course(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS assignment
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS assignment
   description varchar(1500),
   deadline datetime,
   cr_id int,
-  foreign key (cr_id) references course(id)
+  foreign key (cr_id) references course(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS assignment_status
@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS assignment_status
   ass_id int,
   is_complete boolean,
   primary key (st_id, ass_id),
-  foreign key (st_id) references student(id),
-  foreign key (ass_id) references assignment(id)
+  foreign key (st_id) references student(id) ON DELETE CASCADE,
+  foreign key (ass_id) references assignment(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (username, passwd, is_admin)

@@ -14,6 +14,7 @@ def __init_db__():
         f.close()
 
         print("=================== creating database ======================")
+        print("   wait   ")
         try:
             connection = mysql.connector.connect(
                 host=config['host'],
